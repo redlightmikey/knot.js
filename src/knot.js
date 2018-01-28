@@ -48,12 +48,12 @@ const knot = (extended = {}) => {
     }
 
     // run the handlers
-    let once = []
+    let disable = []
 
     events[name].forEach(handler => {
       // collect one time handlers
       if (handler._once) {
-        once.push(handler)
+        disable.push(handler)
       }
 
       // NOTE: does this require a docs update? (whats the this context)
@@ -62,8 +62,8 @@ const knot = (extended = {}) => {
     })
 
     // remove one time handlers if they exist
-    if (once.length !== 0) {
-      off(name, once)
+    if (disable.length !== 0) {
+      off(name, disable)
     }
 
     return face

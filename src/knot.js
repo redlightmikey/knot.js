@@ -26,12 +26,9 @@ const knot = (extended = {}) => {
   // }
 
   const off = (name, ...handlers) => {
-    if (handlers.length === 0) {
-      delete events[name]
-      return face
-    }
-
-    // TODO: need to handle case of multiple events
+    handlers.length === 0
+      ? delete events[name]
+      : events[name] = events[name].filter(handler => handlers.indexOf(handler) === -1)
 
     return face
   }

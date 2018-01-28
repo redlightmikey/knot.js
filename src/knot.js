@@ -1,25 +1,48 @@
 const knot = (extended = {}) => {
   const events = Object.create(null)
 
-  function on (name, handler) {
+  const on = (name, ...handlers) => {
     events[name] = events[name] || []
-    events[name].push(handler)
-    return this
+    events[name] = events[name].concat(handlers)
+    return face
   }
 
-  function once (name, handler) {
-    handler._once = true
-    on(name, handler)
-    return this
+  // function on (name, handler) {
+  //   events[name] = events[name] || []
+  //   events[name].push(handler)
+  //   return this
+  // }
+
+  const once = (name, ...handlers) => {
+    handlers.forEach(handler => handler._once = true)
+    on(name, handlers)
+    return face
   }
 
-  function off (name, handler = false) {
-    handler
-      ? events[name].splice(events[name].indexOf(handler), 1)
-      : delete events[name]
+  // function once (name, handler) {
+  //   handler._once = true
+  //   on(name, handler)
+  //   return this
+  // }
 
-    return this
+  const off = (name, ...handlers) => {
+    if (handlers.length === 0) {
+      delete events[name]
+      return face
+    }
+
+    // TODO: need to handle case of multiple events
+
+    return face
   }
+
+  // function off (name, handler = false) {
+  //   handler
+  //     ? events[name].splice(events[name].indexOf(handler), 1)
+  //     : delete events[name]
+  //
+  //   return this
+  // }
 
   function emit (name, ...args) {
     // cache the events, to avoid consequences of mutation

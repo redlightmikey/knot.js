@@ -11,6 +11,16 @@
     <script>
       console.log('Module assigned to window.Knot. Logged below:')
       console.log(Knot)
+
+      const inst = Knot()
+
+      inst
+        .on(
+          'test',
+          (one, two, three) => console.log(one, two, three),
+          (uno, dos, tres) => console.log(uno, dos, tres)
+        )
+        .emit('test', '1', 2, [3])
     </script>
   </body>
 </html>

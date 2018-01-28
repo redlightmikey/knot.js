@@ -41,30 +41,65 @@ const knot = (extended = {}) => {
   //   return this
   // }
 
-  function emit (name, ...args) {
-    // cache the events, to avoid consequences of mutation
-    const cache = events[name] && events[name].slice()
+  const emit = (name, ...args) => {
+    // exit early if no handlers exist
+    if (!events[name]) {
+      return
+    }
 
-    // only fire handlers if they exist
-    cache && cache.forEach(handler => {
-      // remove handlers added with 'once'
-      handler._once && off(name, handler)
+    // run the handlers
+    let once = []
 
-      // set 'this' context, pass args to handlers
-      handler.apply(this, args)
+    events[name].forEach(handler => {
+      // collect handlers added with once
+      if (handler._once) {
+        once.push(handler)
+      }
+
+      handler.apply(face, args)
     })
 
-    return this
+    // FIXME: if no handlers are marked with once, this will remove all of them
+    // remove handlers added with once
+    off(name, once)
+
+    return face
   }
 
-  return {
-    ...extended,
+  // function emit (name, ...args) {
+  //   // cache the events, to avoid consequences of mutation
+  //   const cache = events[name] && events[name].slice()
+  //
+  //   // only fire handlers if they exist
+  //   cache && cache.forEach(handler => {
+  //     // remove handlers added with 'once'
+  //     handler._once && off(name, handler)
+  //
+  //     // set 'this' context, pass args to handlers
+  //     handler.apply(this, args)
+  //   })
+  //
+  //   return this
+  // }
 
+  const face = {
+    ...extended,
     on,
     once,
     off,
     emit
   }
+
+  return face
+
+  // return {
+  //   ...extended,
+  //
+  //   on,
+  //   once,
+  //   off,
+  //   emit
+  // }
 }
 
 export default knot

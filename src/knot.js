@@ -13,6 +13,7 @@ const knot = (extended = {}) => {
   //   return this
   // }
 
+  // FIXME: something is broken here, with the addition of the prop
   const once = (name, ...handlers) => {
     handlers.forEach(handler => handler._once = true)
     on(name, handlers)

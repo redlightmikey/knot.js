@@ -51,17 +51,20 @@ const knot = (extended = {}) => {
     let once = []
 
     events[name].forEach(handler => {
-      // collect handlers added with once
+      // collect one time handlers
       if (handler._once) {
         once.push(handler)
       }
 
-      handler.apply(face, args)
+      // NOTE: does this require a docs update? (whats the this context)
+      // call handler with passing in the args
+      handler(...args)
     })
 
-    // FIXME: if no handlers are marked with once, this will remove all of them
-    // remove handlers added with once
-    off(name, once)
+    // remove one time handlers if they exist
+    if (once.length !== 0) {
+      off(name, once)
+    }
 
     return face
   }

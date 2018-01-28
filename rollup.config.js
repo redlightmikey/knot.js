@@ -4,18 +4,33 @@ import resolve from 'rollup-plugin-node-resolve'
 const info = require('./package.json')
 
 const config = {
-  entry: 'src/knot.js',
+  input: 'src/knot.js',
   plugins: [
     resolve(),
-    babel()
+    babel({
+      babelrc: false,
+      presets: [
+        [
+          '@babel/preset-env', {
+            modules: false,
+            targets: {
+              browsers: ['last 2 versions']
+            }
+          }
+        ]
+      ],
+      plugins: [
+        "@babel/plugin-proposal-object-rest-spread"
+      ]
+    })
   ],
-  targets: [
+  output: [
     {
-      dest: info.main,
+      file: info.main,
       format: 'umd',
-      moduleName: 'Knot'
+      name: 'Knot'
     }, {
-      dest: info.module,
+      file: info.module,
       format: 'es'
     }
   ]
